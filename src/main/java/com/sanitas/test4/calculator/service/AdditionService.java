@@ -1,4 +1,11 @@
 package com.sanitas.test4.calculator.service;
 
-public class AdditionService {
+import java.math.BigDecimal;
+import java.util.List;
+
+public class AdditionService implements OperationService{
+    @Override
+    public BigDecimal performOperation(List<BigDecimal> numbers) {
+        return null;
+    }
 }
