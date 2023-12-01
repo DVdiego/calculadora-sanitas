@@ -1,13 +1,13 @@
-package com.sanitas.test4.calculadora;
+package com.sanitas.test4.calculator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CalculadoraApplication {
+public class CalculatorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CalculadoraApplication.class, args);
+		SpringApplication.run(CalculatorApplication.class, args);
 	}
 
 }
