@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sanitas.test4</groupId>
-	<artifactId>calculadora</artifactId>
+	<artifactId>calculator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>calculadora</name>
-	<description>Desarrollo de un Microservicio Calculadora</description>
+	<name>calculator</name>
+	<description>Development of a Microservice Calculator</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -32,11 +32,49 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- Dependencia principal -->
+		<dependency>
+			<groupId>io.corp</groupId>
+			<artifactId>calculator</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!-- Dependencia para la documentación Java -->
+		<dependency>
+			<groupId>io.corp</groupId>
+			<artifactId>calculator</artifactId>
+			<version>1.0.0</version>
+			<type>javadoc</type>
+		</dependency>
+
+		<!-- JUnit 5 para pruebas unitarias -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Spring Boot Starter Test para integración con Spring y pruebas de integración -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- analiza la cobertura en pruebas que se tienen y te genera un reporte -->
+		<dependency>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.8.9</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
