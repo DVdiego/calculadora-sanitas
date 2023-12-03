@@ -31,9 +31,7 @@ public class CalculatorController {
     })
     public BigDecimal perform(@RequestBody BasicOperationRequest request) {
         OperationService operationService = operationFactory.getOperation(request.getOperation());
-        BigDecimal result = operationService.performOperation(request.getNumbers());
-
-        return result;
+        return operationService.performOperation(request.getNumbers());
     }
 
 }
