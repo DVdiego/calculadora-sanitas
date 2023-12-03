@@ -20,7 +20,7 @@ public class OperationFactory {
 
     public OperationService getOperation(String operationType) {
         return operations.computeIfAbsent(operationType.toLowerCase(), key -> {
-            throw new InvalidOperationException("Invalid Operation");
+            throw new InvalidOperationException("Operation not supported");
         });
     }
 
