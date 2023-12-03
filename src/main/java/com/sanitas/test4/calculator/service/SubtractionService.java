@@ -1,12 +1,12 @@
 package com.sanitas.test4.calculator.service;
 
 import com.sanitas.test4.calculator.exception.InvalidOperationException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Component
+@Service
 public class SubtractionService implements OperationService{
     @Override
     public BigDecimal performOperation(List<BigDecimal> numbers) {
