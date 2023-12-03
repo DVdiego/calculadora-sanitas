@@ -25,11 +25,13 @@ public class CalculatorController {
     @Autowired
     private TracerAPI tracerAPI;
 
-    @PostMapping("/perform")
-    @Operation(summary = "Performs an arithmetic operation", responses = {
+    @PostMapping("/v1/perform")
+    @Operation(summary = "Perform basic arithmetic operation.",
+            description = "Performs addition or subtraction operations on the numbers provided as parameters",
+            responses = {
             @ApiResponse(responseCode = "200", description = "Result of the operation",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = BigDecimal.class))),
-            @ApiResponse(responseCode = "400", description = "Invalid operation",
+            @ApiResponse(responseCode = "400", description = "Operation not supported",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
     })
     public BigDecimal perform(@RequestBody BasicOperationRequest request) {
