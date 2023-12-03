@@ -1,0 +1,58 @@
+---
+openapi: 3.0.1
+info:
+  title: Calculator API
+  description: This API exposes endpoints to perform addition and subtraction operations.
+  contact:
+    name: DVdiego
+    url: https://github.com/DVdiego/calculadora-sanitas/
+    email: diego.borja.mail@gmail.com
+  version: '1.0'
+servers:
+  - url: http://localhost:8080
+    description: Server URL in development environment
+paths:
+  "/calculator/v1/perform":
+    post:
+      tags:
+        - calculator-controller
+      summary: Perform basic arithmetic operation.
+      description: Performs addition or subtraction operations on the numbers provided
+        as parameters
+      operationId: perform
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BasicOperationRequest"
+        required: true
+      responses:
+        '200':
+          description: Result of the operation
+          content:
+            application/json:
+              schema:
+                type: number
+        '400':
+          description: Operation not supported
+          content:
+            application/json:
+              schema:
+                type: string
+        '500':
+          description: Internal Server Error
+          content:
+            "*/*":
+              schema:
+                type: string
+components:
+  schemas:
+    BasicOperationRequest:
+      type: object
+      properties:
+        operation:
+          type: string
+        numbers:
+          type: array
+          items:
+            type: number
