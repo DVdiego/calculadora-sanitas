@@ -3,6 +3,7 @@ package com.sanitas.test4.calculator.controller;
 import com.sanitas.test4.calculator.OperationFactory;
 import com.sanitas.test4.calculator.model.BasicOperationRequest;
 import com.sanitas.test4.calculator.service.OperationService;
+import io.corp.calculator.TracerAPI;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,8 @@ public class CalculatorController {
 
     @Autowired
     private OperationFactory operationFactory;
+    @Autowired
+    private TracerAPI tracerAPI;
 
     @PostMapping("/perform")
     @Operation(summary = "Performs an arithmetic operation", responses = {
@@ -30,8 +33,10 @@ public class CalculatorController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
     })
     public BigDecimal perform(@RequestBody BasicOperationRequest request) {
-        OperationService operationService = operationFactory.getOperation(request.getOperation());
-        return operationService.performOperation(request.getNumbers());
+        OperationService operationService = this.operationFactory.getOperation(request.getOperation());
+        BigDecimal result = operationService.performOperation(request.getNumbers());
+        this.tracerAPI.trace("Operation " + request.getOperation() + " result successfully: " + result);
+        return result;
     }
 
 }
