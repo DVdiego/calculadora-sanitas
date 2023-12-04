@@ -1,0 +1,22 @@
+springdoc:
+  api-docs:
+    path: /api-docs
+
+calculator:
+  openapi:
+    dev-url: http://localhost:8080
+  api:
+    base-url: /calculator/v1/perform
+
+operation:
+  supported:
+    addition: "+"
+    subtraction: "-"
+
+exception:
+  messages:
+    invalid-operation: "Invalid operation"
+    operation-not-supported: "Operation not supported"
+    generic-exception: "Internal Server Error"
+    list-numbers-wrong: "The list should contain at least two numbers"
+
