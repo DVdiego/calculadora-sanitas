@@ -1,5 +1,6 @@
 package com.sanitas.test4.calculator.controller;
 
+import com.sanitas.test4.calculator.ApiErrorResponse;
 import com.sanitas.test4.calculator.OperationFactory;
 import com.sanitas.test4.calculator.model.BasicOperationRequest;
 import com.sanitas.test4.calculator.service.OperationService;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +34,15 @@ public class CalculatorController {
             @ApiResponse(responseCode = "200", description = "Result of the operation",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = BigDecimal.class))),
             @ApiResponse(responseCode = "400", description = "Operation not supported",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
-    })
-    public BigDecimal perform(@RequestBody BasicOperationRequest request) {
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class)))
+    })    public ResponseEntity<BigDecimal> perform(@RequestBody BasicOperationRequest request) {
         OperationService operationService = this.operationFactory.getOperation(request.getOperation());
         BigDecimal result = operationService.performOperation(request.getNumbers());
         this.tracerAPI.trace("Operation " + request.getOperation() + " result successfully: " + result);
-        return result;
+        return ResponseEntity.ok(result);
     }
+
 
 }
