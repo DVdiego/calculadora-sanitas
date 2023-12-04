@@ -1,5 +1,6 @@
 package com.sanitas.test4.calculator.controller;
 
+import com.sanitas.test4.calculator.ExceptionMessages;
 import com.sanitas.test4.calculator.OperationFactory;
 import com.sanitas.test4.calculator.exception.InvalidOperationException;
 import com.sanitas.test4.calculator.service.AdditionService;
@@ -8,6 +9,7 @@ import io.corp.calculator.TracerAPI;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,11 +38,17 @@ class CalculatorControllerTest {
     @InjectMocks
     private CalculatorController calculatorController;
 
+    @Value("${calculator.api.base-url}")
+    private String baseUrl;
+
+    @Autowired
+    private ExceptionMessages exceptionMessages;
+
     @Test
     void shouldPerformAdditionOperationSuccessfully() throws Exception {
         when(this.operationFactory.getOperation(any())).thenReturn(new AdditionService());
 
-        this.mockMvc.perform(post("/calculator/perform")
+        this.mockMvc.perform(post(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"operation\": \"addition\", \"numbers\": [2, 3, 5]}")
                 )
@@ -52,7 +60,7 @@ class CalculatorControllerTest {
     void shouldPerformSubtractionOperationSuccessfully() throws Exception {
         when(this.operationFactory.getOperation(any())).thenReturn(new SubtractionService());
 
-        this.mockMvc.perform(post("/calculator/perform")
+        this.mockMvc.perform(post(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"operation\": \"subtraction\", \"numbers\": [5, 3]}")
                 )
@@ -61,14 +69,14 @@ class CalculatorControllerTest {
     }
     @Test
     void shouldHandleInvalidOperation() throws Exception {
-        when(this.operationFactory.getOperation(any())).thenThrow(new InvalidOperationException("Operation not supported"));
+        when(this.operationFactory.getOperation(any())).thenThrow(new InvalidOperationException(this.exceptionMessages.getMessages().get("operation-not-supported")));
 
-        this.mockMvc.perform(post("/calculator/perform")
+        this.mockMvc.perform(post(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"operation\": \"otherOperation\", \"numbers\": [2, 3]}")
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", is("Operation not supported")));
+                .andExpect(jsonPath("$", is(this.exceptionMessages.getMessages().get("operation-not-supported"))));
     }
 
 }
