@@ -1,6 +1,6 @@
 package com.sanitas.test4.calculator.service;
 
-import com.sanitas.test4.calculator.ExceptionMessages;
+import com.sanitas.test4.calculator.configuration.ExceptionMessages;
 import com.sanitas.test4.calculator.exception.InvalidOperationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

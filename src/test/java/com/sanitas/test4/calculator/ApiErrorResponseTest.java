@@ -1,5 +1,6 @@
 package com.sanitas.test4.calculator;
 
+import com.sanitas.test4.calculator.model.ApiErrorResponse;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

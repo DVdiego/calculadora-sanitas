@@ -1,4 +1,4 @@
-package com.sanitas.test4.calculator;
+package com.sanitas.test4.calculator.configuration;
 
 import com.sanitas.test4.calculator.model.OperationProvider;
 import com.sanitas.test4.calculator.service.AdditionService;

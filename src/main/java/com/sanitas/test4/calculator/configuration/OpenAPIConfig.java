@@ -1,4 +1,4 @@
-package com.sanitas.test4.calculator;
+package com.sanitas.test4.calculator.configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;

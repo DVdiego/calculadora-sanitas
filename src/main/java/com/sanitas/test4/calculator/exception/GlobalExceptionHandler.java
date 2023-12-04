@@ -1,8 +1,8 @@
 package com.sanitas.test4.calculator.exception;
 
 
-import com.sanitas.test4.calculator.ApiErrorResponse;
-import com.sanitas.test4.calculator.ExceptionMessages;
+import com.sanitas.test4.calculator.model.ApiErrorResponse;
+import com.sanitas.test4.calculator.configuration.ExceptionMessages;
 import io.corp.calculator.TracerAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

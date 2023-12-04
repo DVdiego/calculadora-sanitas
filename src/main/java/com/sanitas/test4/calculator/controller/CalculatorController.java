@@ -1,7 +1,7 @@
 package com.sanitas.test4.calculator.controller;
 
-import com.sanitas.test4.calculator.ApiErrorResponse;
-import com.sanitas.test4.calculator.OperationFactory;
+import com.sanitas.test4.calculator.model.ApiErrorResponse;
+import com.sanitas.test4.calculator.factory.OperationFactory;
 import com.sanitas.test4.calculator.model.BasicOperationRequest;
 import com.sanitas.test4.calculator.service.OperationService;
 import io.corp.calculator.TracerAPI;

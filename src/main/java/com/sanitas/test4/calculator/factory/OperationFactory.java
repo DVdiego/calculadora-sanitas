@@ -1,5 +1,6 @@
-package com.sanitas.test4.calculator;
+package com.sanitas.test4.calculator.factory;
 
+import com.sanitas.test4.calculator.configuration.ExceptionMessages;
 import com.sanitas.test4.calculator.exception.InvalidOperationException;
 import com.sanitas.test4.calculator.model.OperationProvider;
 import com.sanitas.test4.calculator.service.OperationService;
@@ -10,7 +11,6 @@ import java.util.Map;
 
 @Component
 public class OperationFactory {
-
 
     private final ExceptionMessages exceptionMessages;
     private final Map<String, OperationService> operations;

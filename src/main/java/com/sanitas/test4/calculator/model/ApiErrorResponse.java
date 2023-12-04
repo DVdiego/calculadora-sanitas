@@ -1,4 +1,4 @@
-package com.sanitas.test4.calculator;
+package com.sanitas.test4.calculator.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

@@ -1,6 +1,7 @@
 package com.sanitas.test4.calculator;
 
 import com.sanitas.test4.calculator.exception.InvalidOperationException;
+import com.sanitas.test4.calculator.factory.OperationFactory;
 import com.sanitas.test4.calculator.service.AdditionService;
 import com.sanitas.test4.calculator.service.OperationService;
 import com.sanitas.test4.calculator.service.SubtractionService;
