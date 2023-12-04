@@ -22,7 +22,7 @@ public class OperationFactory {
     }
 
     public OperationService getOperation(String operationType) {
-        return operations.computeIfAbsent(operationType.toLowerCase(), key -> {
+        return operations.computeIfAbsent(operationType.toLowerCase().trim(), key -> {
             throw new InvalidOperationException(this.exceptionMessages.getMessages().get("operation-not-supported"));
         });
     }
