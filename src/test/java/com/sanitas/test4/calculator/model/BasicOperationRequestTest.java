@@ -29,26 +29,26 @@ class BasicOperationRequestTest {
         List<BigDecimal> numbers = Arrays.asList(BigDecimal.valueOf(1), BigDecimal.valueOf(2), BigDecimal.valueOf(3));
 
         this.operation1 = new BasicOperationRequest();
-        this.operation1.setOperation("addition");
+        this.operation1.setOperation("+");
         this.operation1.setNumbers(numbers);
 
         this.operation2 = new BasicOperationRequest();
-        this.operation2.setOperation("addition");
+        this.operation2.setOperation("+");
         this.operation2.setNumbers(numbers);
 
         this.operation3 = new BasicOperationRequest();
-        this.operation3.setOperation("subtraction");
+        this.operation3.setOperation("-");
         this.operation3.setNumbers(Arrays.asList(BigDecimal.valueOf(4), BigDecimal.valueOf(5), BigDecimal.valueOf(6)));
     }
 
     @Test
     void gettersAndSettersShouldWorkCorrectly() {
         BasicOperationRequest request = new BasicOperationRequest();
-        request.setOperation("addition");
+        request.setOperation("+");
         List<BigDecimal> numbers = Arrays.asList(BigDecimal.valueOf(1), BigDecimal.valueOf(2), BigDecimal.valueOf(3));
         request.setNumbers(numbers);
 
-        assertEquals("addition", request.getOperation());
+        assertEquals("+", request.getOperation());
         assertEquals(numbers, request.getNumbers());
     }
 
@@ -56,7 +56,7 @@ class BasicOperationRequestTest {
     void testValidBasicOperationRequest() {
         List<BigDecimal> numbers = Arrays.asList(BigDecimal.ONE, BigDecimal.TEN);
         BasicOperationRequest request = new BasicOperationRequest();
-        request.setOperation("addition");
+        request.setOperation("+");
         request.setNumbers(numbers);
         BindingResult errors = new BeanPropertyBindingResult(request, "request");
         this.validator.validate(request, errors);
@@ -82,6 +82,6 @@ class BasicOperationRequestTest {
 
     @Test
     void testToString() {
-        assertEquals("BasicOperationRequest(operation=addition, numbers=[1, 2, 3])", this.operation1.toString());
+        assertEquals("BasicOperationRequest(operation=+, numbers=[1, 2, 3])", this.operation1.toString());
     }
 }
