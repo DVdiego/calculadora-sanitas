@@ -1,6 +1,7 @@
 package com.sanitas.test4.calculator.exception;
 
 
+import com.sanitas.test4.calculator.ApiErrorResponse;
 import com.sanitas.test4.calculator.ExceptionMessages;
 import io.corp.calculator.TracerAPI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +23,41 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidOperationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleInvalidOperation(InvalidOperationException ex) {
-        this.tracerAPI.trace("Exception InvalidOperationException: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<ApiErrorResponse> handleInvalidOperation(InvalidOperationException ex) {
+        String message = this.exceptionMessages.getMessages().get("invalid-operation");
+        ApiErrorResponse errorResponse = new ApiErrorResponse();
+        errorResponse.setMessage(message);
+        errorResponse.setDetails(ex.getMessage());
+
+        ResponseEntity<ApiErrorResponse> response = new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        this.tracerAPI.trace(response);
+        return response;
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        this.tracerAPI.trace("Exception HttpMessageNotReadableException: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<ApiErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        String message = this.exceptionMessages.getMessages().get("incorrect-data-format");
+        ApiErrorResponse errorResponse = new ApiErrorResponse();
+        errorResponse.setMessage(message);
+        errorResponse.setDetails(ex.getMessage());
+
+        ResponseEntity<ApiErrorResponse> response = new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        this.tracerAPI.trace(response);
+        return response;
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<String> handleException(Exception ex) {
+    public ResponseEntity<ApiErrorResponse> handleException(Exception ex) {
         String message = this.exceptionMessages.getMessages().get("generic-exception");
-        this.tracerAPI.trace("Internal Server Error: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+        ApiErrorResponse errorResponse = new ApiErrorResponse();
+        errorResponse.setMessage(message);
+        errorResponse.setDetails(ex.getMessage());
+
+        ResponseEntity<ApiErrorResponse> response = new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        this.tracerAPI.trace(response);
+        return response;
     }
 
 }
