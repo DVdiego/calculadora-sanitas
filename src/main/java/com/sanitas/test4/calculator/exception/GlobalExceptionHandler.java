@@ -1,6 +1,7 @@
 package com.sanitas.test4.calculator.exception;
 
 
+import com.sanitas.test4.calculator.ExceptionMessages;
 import io.corp.calculator.TracerAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,9 @@ public class GlobalExceptionHandler {
 
     @Autowired
     private TracerAPI tracerAPI;
+
+    @Autowired
+    private ExceptionMessages exceptionMessages;
 
     @ExceptionHandler(InvalidOperationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -33,8 +37,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleException(Exception ex) {
+        String message = this.exceptionMessages.getMessages().get("generic-exception");
         this.tracerAPI.trace("Internal Server Error: " + ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
     }
 
 }
