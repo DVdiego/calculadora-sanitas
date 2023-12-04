@@ -50,7 +50,7 @@ class CalculatorControllerTest {
 
         this.mockMvc.perform(post(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"operation\": \"addition\", \"numbers\": [2, 3, 5]}")
+                        .content("{\"operation\": \"+\", \"numbers\": [2, 3, 5]}")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(10)));
@@ -62,7 +62,7 @@ class CalculatorControllerTest {
 
         this.mockMvc.perform(post(baseUrl)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"operation\": \"subtraction\", \"numbers\": [5, 3]}")
+                        .content("{\"operation\": \"-\", \"numbers\": [5, 3]}")
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(2)));
@@ -76,7 +76,20 @@ class CalculatorControllerTest {
                         .content("{\"operation\": \"otherOperation\", \"numbers\": [2, 3]}")
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$", is(this.exceptionMessages.getMessages().get("operation-not-supported"))));
+                .andExpect(jsonPath("$.message", is("Invalid operation")))
+                .andExpect(jsonPath("$.details", is("Operation not supported")));
     }
 
+    @Test
+    void shouldHandleInternalServerError() throws Exception {
+        when(this.operationFactory.getOperation(any())).thenThrow(new RuntimeException("Simulated internal server error"));
+
+        this.mockMvc.perform(post(baseUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"operation\": \"+\", \"numbers\": [2, 3, 5]}")
+                )
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message", is(this.exceptionMessages.getMessages().get("generic-exception"))))
+                .andExpect(jsonPath("$.details", is("Simulated internal server error")));
+    }
 }
