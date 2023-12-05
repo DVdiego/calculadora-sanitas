@@ -1,0 +1,117 @@
+classDiagram
+
+class CalculatorController {
+  <<RestController>>
+  <<Autowired>>
+  - operationFactory: OperationFactory
+  <<Autowired>>
+  - tracerAPI: TracerAPI
+  + perform(request: BasicOperationRequest): ResponseEntity<BigDecimal>
+}
+
+class OperationFactory {
+  <<Component>>
+  - exceptionMessages: ExceptionMessages
+  - operations: Map<String, OperationService>
+  <<Autowired>>
+  + getOperation(operationType: String): OperationService
+}
+
+class TracerAPI {
+  + trace(t: T): void
+}
+
+class BasicOperationRequest {
+  + operation: String
+  + numbers: List<BigDecimal>
+}
+
+class OperationService {
+  <<Service>>
+  + performOperation(numbers: List<BigDecimal>): BigDecimal
+}
+
+
+CalculatorController -- OperationFactory: uses
+CalculatorController -- TracerAPI: uses
+CalculatorController -- BasicOperationRequest: uses
+CalculatorController -- OperationService: uses
+CalculatorController -- CalculatorException: throws
+CalculatorController -- GlobalExceptionHandler: uses
+
+
+class OperationFactory {
+  <<Component>>
+  - exceptionMessages: ExceptionMessages
+  - operations: Map<String, OperationService>
+  <<Autowired>>
+  + getOperation(operationType: String): OperationService
+}
+
+class ExceptionMessages {
+  <<Configuration>>
+  + messages: Map<String, String>
+}
+
+class OperationService {
+  <<Service>>
+  + performOperation(numbers: List<BigDecimal>): BigDecimal
+}
+
+class InvalidOperationException {
+  + message: String
+}
+
+OperationFactory -- ExceptionMessages: has
+OperationFactory -- OperationService: uses
+OperationFactory -- OperationProvider: uses
+OperationFactory -- InvalidOperationException: throws
+
+
+class AdditionService {
+  <<Service>>
+  <<Autowired>>
+  - exceptionMessages: ExceptionMessages
+  + performOperation(numbers: List<BigDecimal>): BigDecimal
+}
+
+
+class SubtractionService {
+  <<Service>>
+  <<Autowired>>
+  - exceptionMessages: ExceptionMessages
+  + performOperation(numbers: List<BigDecimal>): BigDecimal
+}
+
+OperationService <|.. AdditionService: extends
+OperationService <|.. SubtractionService:extends
+
+class CalculatorException {
+  + message: String
+}
+
+class ExceptionMessages {
+  <<Configuration>>
+  + messages: Map<String, String>
+}
+
+class GlobalExceptionHandler {
+  <<RestControllerAdvice>>
+  <<Autowired>>
+  - tracerAPI: TracerAPI
+  <<Autowired>>
+  - exceptionMessages: ExceptionMessages
+  + handleInvalidOperation(ex: InvalidOperationException): ResponseEntity<ApiErrorResponse>
+  + handleHttpMessageNotReadableException(ex: HttpMessageNotReadableException): ResponseEntity<ApiErrorResponse>
+  + handleException(ex: CalculatorException): ResponseEntity<ApiErrorResponse>
+}
+
+
+GlobalExceptionHandler -- InvalidOperationException: creates
+GlobalExceptionHandler -- CalculatorException: creates
+GlobalExceptionHandler -- TracerAPI: uses
+GlobalExceptionHandler -- ExceptionMessages: uses
+
+class OperationProvider {
+  + getOperations(): Map<String, OperationService>
+}
