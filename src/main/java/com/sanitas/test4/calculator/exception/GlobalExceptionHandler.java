@@ -2,7 +2,6 @@ package com.sanitas.test4.calculator.exception;
 
 
 import com.sanitas.test4.calculator.model.ApiErrorResponse;
-import com.sanitas.test4.calculator.configuration.ExceptionMessages;
 import io.corp.calculator.TracerAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,9 +46,9 @@ public class GlobalExceptionHandler {
         return response;
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(CalculatorException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ApiErrorResponse> handleException(Exception ex) {
+    public ResponseEntity<ApiErrorResponse> handleException(CalculatorException ex) {
         String message = this.exceptionMessages.getMessages().get("generic-exception");
         ApiErrorResponse errorResponse = new ApiErrorResponse();
         errorResponse.setMessage(message);

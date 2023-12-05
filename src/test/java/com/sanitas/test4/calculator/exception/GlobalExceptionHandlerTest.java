@@ -1,7 +1,6 @@
 package com.sanitas.test4.calculator.exception;
 
 import com.sanitas.test4.calculator.model.ApiErrorResponse;
-import com.sanitas.test4.calculator.configuration.ExceptionMessages;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -52,7 +51,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void handleException() {
 
-        Exception exception = mock(Exception.class);
+        CalculatorException exception = mock(CalculatorException.class);
         when(exception.getMessage()).thenReturn(this.exceptionMessages.getMessages().get("generic-exception"));
         ResponseEntity<ApiErrorResponse> responseEntity = this.exceptionHandler.handleException(exception);
 
