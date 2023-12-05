@@ -19,5 +19,6 @@ exception:
     operation-not-supported: "Operation not supported"
     generic-exception: "Internal Server Error"
     incorrect-data-format: "Incorrect data format"
+    list-numbers-wrong: "The list should contain at least two numbers"
 
 
