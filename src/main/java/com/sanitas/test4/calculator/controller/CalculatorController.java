@@ -1,5 +1,7 @@
 package com.sanitas.test4.calculator.controller;
 
+import com.sanitas.test4.calculator.exception.CalculatorException;
+import com.sanitas.test4.calculator.exception.InvalidOperationException;
 import com.sanitas.test4.calculator.model.ApiErrorResponse;
 import com.sanitas.test4.calculator.factory.OperationFactory;
 import com.sanitas.test4.calculator.model.BasicOperationRequest;
@@ -37,11 +39,18 @@ public class CalculatorController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class)))
-    })    public ResponseEntity<BigDecimal> perform(@RequestBody BasicOperationRequest request) {
-        OperationService operationService = this.operationFactory.getOperation(request.getOperation());
-        BigDecimal result = operationService.performOperation(request.getNumbers());
-        this.tracerAPI.trace("Operation " + request.getOperation() + " result successfully: " + result);
-        return ResponseEntity.ok(result);
+    })    public ResponseEntity<BigDecimal> perform(@RequestBody BasicOperationRequest request) throws CalculatorException {
+        try {
+            OperationService operationService = this.operationFactory.getOperation(request.getOperation());
+            BigDecimal result = operationService.performOperation(request.getNumbers());
+            String arithmeticOperation = String.join(" " + request.getOperation() + " ", request.getNumbers().stream().map(BigDecimal::toString).toArray(String[]::new));
+            this.tracerAPI.trace("Operation result Successfully: " + arithmeticOperation + " = " + result);
+            return ResponseEntity.ok(result);
+        } catch (InvalidOperationException invalidOperationException) {
+            throw invalidOperationException;
+        } catch (Exception ex) {
+            throw new CalculatorException(ex.getMessage(), ex);
+        }
     }
 
 
