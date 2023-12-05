@@ -1,4 +1,4 @@
-package com.sanitas.test4.calculator.configuration;
+package com.sanitas.test4.calculator.exception;
 
 import lombok.Getter;
 import lombok.Setter;

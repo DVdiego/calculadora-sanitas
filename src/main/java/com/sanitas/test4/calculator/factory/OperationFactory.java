@@ -1,6 +1,6 @@
 package com.sanitas.test4.calculator.factory;
 
-import com.sanitas.test4.calculator.configuration.ExceptionMessages;
+import com.sanitas.test4.calculator.exception.ExceptionMessages;
 import com.sanitas.test4.calculator.exception.InvalidOperationException;
 import com.sanitas.test4.calculator.model.OperationProvider;
 import com.sanitas.test4.calculator.service.OperationService;
