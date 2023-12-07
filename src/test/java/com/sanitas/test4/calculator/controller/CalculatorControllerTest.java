@@ -53,7 +53,8 @@ class CalculatorControllerTest {
                         .content("{\"operation\": \"+\", \"numbers\": [2, 3, 5]}")
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is(10)));
+                .andExpect(jsonPath("$.expression", is("2 + 3 + 5")))
+                .andExpect(jsonPath("$.result", is(10)));
     }
 
     @Test
@@ -65,7 +66,8 @@ class CalculatorControllerTest {
                         .content("{\"operation\": \"-\", \"numbers\": [5, 3]}")
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is(2)));
+                .andExpect(jsonPath("$.expression", is("5 - 3")))
+                .andExpect(jsonPath("$.result", is(2)));
     }
     @Test
     void shouldHandleInvalidOperation() throws Exception {
@@ -76,8 +78,8 @@ class CalculatorControllerTest {
                         .content("{\"operation\": \"otherOperation\", \"numbers\": [2, 3]}")
                 )
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message", is("Invalid operation")))
-                .andExpect(jsonPath("$.details", is("Operation not supported")));
+                .andExpect(jsonPath("$.message", is(this.exceptionMessages.getMessages().get("invalid-operation"))))
+                .andExpect(jsonPath("$.details", is(this.exceptionMessages.getMessages().get("operation-not-supported"))));
     }
 
     @Test

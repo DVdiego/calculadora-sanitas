@@ -5,6 +5,7 @@ import com.sanitas.test4.calculator.exception.InvalidOperationException;
 import com.sanitas.test4.calculator.model.ApiErrorResponse;
 import com.sanitas.test4.calculator.factory.OperationFactory;
 import com.sanitas.test4.calculator.model.BasicOperationRequest;
+import com.sanitas.test4.calculator.model.OperationResponse;
 import com.sanitas.test4.calculator.service.OperationService;
 import io.corp.calculator.TracerAPI;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,18 +35,25 @@ public class CalculatorController {
             description = "Performs addition or subtraction operations on the numbers provided as parameters",
             responses = {
             @ApiResponse(responseCode = "200", description = "Result of the operation",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = BigDecimal.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = OperationResponse.class))),
             @ApiResponse(responseCode = "400", description = "Operation not supported",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiErrorResponse.class)))
-    })    public ResponseEntity<BigDecimal> perform(@RequestBody BasicOperationRequest request) throws CalculatorException {
+    })    public ResponseEntity<OperationResponse> perform(@RequestBody BasicOperationRequest request) throws CalculatorException {
         try {
             OperationService operationService = this.operationFactory.getOperation(request.getOperation());
             BigDecimal result = operationService.performOperation(request.getNumbers());
-            String arithmeticOperation = String.join(" " + request.getOperation() + " ", request.getNumbers().stream().map(BigDecimal::toString).toArray(String[]::new));
-            this.tracerAPI.trace("Operation result Successfully: " + arithmeticOperation + " = " + result);
-            return ResponseEntity.ok(result);
+            String expression = String.join(" " + request.getOperation() + " ",
+                    request.getNumbers().stream().map(BigDecimal::toString).toArray(String[]::new));
+
+            OperationResponse operationResponse = new OperationResponse();
+            operationResponse.setExpression(expression);
+            operationResponse.setResult(result);
+
+            this.tracerAPI.trace("Operation performed successfully: " + expression + " = " + result);
+
+            return ResponseEntity.ok(operationResponse);
         } catch (InvalidOperationException invalidOperationException) {
             throw invalidOperationException;
         } catch (Exception ex) {
