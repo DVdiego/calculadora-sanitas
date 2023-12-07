@@ -31,14 +31,16 @@ Planificación y Tareas:
 	   - Subtarea 2: Implementar `OperationFactory` para que pase las pruebas. 
 	   - Subtarea 3: Desarrollar pruebas para `BasicOperationRequest` 
 	   - Subtarea 4: Implementar `BasicOperationRequest` para que pase las pruebas. 
-	   - Subtarea 5: Escribir pruebas adicionales para cubrir casos específicos. 
+	   - Subtarea 5: Escribir pruebas adicionales para cubrir casos específicos.
+       - Subtarea 6: Implementar `OperationResponse` para que pase las pruebas.
 
 	4. Exposición de la API RESTful:
 	   - Subtarea 1: Desarrollar pruebas para `CalculatorController`
 	   - Subtarea 2: Desarrollar un controlador con OpenAPI (`CalculatorController`) para manejar las solicitudes HTTP. 
 	   - Subtarea 3: Exponer un endpoint para realizar operaciones aritméticas a través de la API RESTful. 
 	   - Subtarea 4: Validar y procesar los parámetros de entrada en el controlador.
-	   - Subtarea 5: Definir configuración de la API y
+	   - Subtarea 5: Definir configuración de la API
+       - Subtarea 6: Añadir test de integración para suma, resta y operaciones no soportadas
 
 	5. Manejo de Excepciones y Traceo:
 	   - Subtarea 1: Implementar la clase `InvalidOperationException` para representar operaciones no válidas. 
@@ -47,10 +49,11 @@ Planificación y Tareas:
 	   - Subtarea 4: Añadir más métodos para capturar todas las excepciones con la librería de traceo (`TracerAPI`).  
 	   - Subtarea 5: Añadir respuesta de error personalizada
 
-	7. Pruebas Unitarias y Cobertura:
-	   - Subtarea 1: Desarrollar pruebas unitarias para cada clase utilizando JUnit5 y TDD. 
-	   - Subtarea 2: Superar un 80% de cobertura de código mediante pruebas unitarias.  
-	   
 	6. Documentación del Proyecto:
 	   - Subtarea 1: Crear un archivo README detallado que incluya la estructura del proyecto, dependencias utilizadas, funcionalidades implementadas,
 	   alcance del servicio, procedimientos de compilación y ejecución, ejemplos de llamadas de la API, y decisiones de implementación.
+	
+    7. Pruebas Unitarias y Cobertura:
+	   - Subtarea 1: Desarrollar pruebas unitarias para cada clase utilizando JUnit5 y TDD. 
+	   - Subtarea 2: Superar un 80% de cobertura de código mediante pruebas unitarias.  
+       - Subtarea 3: Añadir test para comprobar que las propiedades para las excepciones se leen correctamente
