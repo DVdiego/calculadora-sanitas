@@ -34,16 +34,17 @@
 		</dependency>
 
 		<!-- Dependencia principal -->
+
 		<dependency>
-			<groupId>io.corp</groupId>
-			<artifactId>calculator</artifactId>
+			<groupId>io.corp.calculator</groupId>
+			<artifactId>tracer</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 
 		<!-- Dependencia para la documentación Java -->
 		<dependency>
-			<groupId>io.corp</groupId>
-			<artifactId>calculator</artifactId>
+			<groupId>io.corp.calculator</groupId>
+			<artifactId>tracer</artifactId>
 			<version>1.0.0</version>
 			<type>javadoc</type>
 		</dependency>
@@ -107,6 +108,30 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<groupId>io.corp.calculator</groupId>
+					<artifactId>tracer</artifactId>
+					<version>1.0.0</version>
+					<packaging>jar</packaging>
+					<file>${project.basedir}/lib/tracer-1.0.0.jar</file>
+					<generatePom>true</generatePom>
+					<sources>${project.basedir}/lib/tracer-1.0.0-sources.jar</sources>
+					<javadoc>${project.basedir}/lib/tracer-1.0.0-javadoc.jar</javadoc>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install-jar-lib</id>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<phase>validate</phase>
 					</execution>
 				</executions>
 			</plugin>
