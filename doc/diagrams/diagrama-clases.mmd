@@ -34,11 +34,11 @@ class OperationService {
 
 CalculatorController -- OperationFactory: uses
 CalculatorController -- TracerAPI: uses
-CalculatorController -- BasicOperationRequest: uses
+CalculatorController --> BasicOperationRequest: uses
 CalculatorController -- OperationService: uses
 CalculatorController -- CalculatorException: throws
 CalculatorController -- GlobalExceptionHandler: uses
-
+CalculatorController --> OperationResponse: sends
 
 class OperationFactory {
   <<Component>>
@@ -106,12 +106,35 @@ class GlobalExceptionHandler {
   + handleException(ex: CalculatorException): ResponseEntity<ApiErrorResponse>
 }
 
+class InvalidOperationException {
+  + message: String
+}
 
+class ApiErrorResponse {
+  + message: String
+  + details: String
+}
+
+GlobalExceptionHandler --> ApiErrorResponse: sends
 GlobalExceptionHandler -- InvalidOperationException: creates
 GlobalExceptionHandler -- CalculatorException: creates
 GlobalExceptionHandler -- TracerAPI: uses
 GlobalExceptionHandler -- ExceptionMessages: uses
 
+
 class OperationProvider {
   + getOperations(): Map<String, OperationService>
 }
+
+  class OperationResponse {
+    + expression: String
+    + result: BigDecimal
+  }
+
+  class OperationService {
+    <<Service>>
+    + performOperation(numbers: List<BigDecimal>): BigDecimal
+  }
+
+
+
