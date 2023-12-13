@@ -3,7 +3,6 @@ package com.sanitas.test4.calculator.service;
 import com.sanitas.test4.calculator.exception.ExceptionMessages;
 import com.sanitas.test4.calculator.exception.InvalidOperationException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,9 +10,11 @@ import java.util.List;
 @Service
 public class AdditionService implements OperationService {
 
+    private final ExceptionMessages exceptionMessages;
 
-    @Autowired
-    private ExceptionMessages exceptionMessages;
+    public AdditionService(ExceptionMessages exceptionMessages) {
+        this.exceptionMessages = exceptionMessages;
+    }
 
     @Override
     public BigDecimal performOperation(List<BigDecimal> numbers) {
