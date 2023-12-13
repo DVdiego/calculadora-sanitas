@@ -1,45 +1,76 @@
 package com.sanitas.test4.calculator.factory;
 
+import com.sanitas.test4.calculator.exception.ExceptionMessages;
 import com.sanitas.test4.calculator.exception.InvalidOperationException;
+import com.sanitas.test4.calculator.model.OperationProvider;
 import com.sanitas.test4.calculator.service.AdditionService;
 import com.sanitas.test4.calculator.service.OperationService;
 import com.sanitas.test4.calculator.service.SubtractionService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.HashMap;
+import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
 public class OperationFactoryTest {
 
-    @Value("${operation.supported.addition}")
-    private String addition;
+    @Mock
+    private ExceptionMessages exceptionMessages;
 
-    @Value("${operation.supported.subtraction}")
-    private String subtraction;
+    @Mock
+    private OperationProvider operationProvider;
 
-    @Autowired
+    @InjectMocks
     private OperationFactory operationFactory;
+    private AutoCloseable closeable;
 
-    @Test
-    void shouldReturnAdditionServiceForAdditionOperation() {
-        OperationService operationService = this.operationFactory.getOperation(this.addition);
-        assertSame(AdditionService.class, operationService.getClass());
+    @BeforeEach
+    void setUp() {
+        this.closeable = MockitoAnnotations.openMocks(this);
+        when(this.exceptionMessages.getMessages()).thenReturn(new HashMap<>());
+        when(this.operationProvider.getOperations()).thenReturn(createMockOperations());
+        this.operationFactory = new OperationFactory(this.operationProvider, this.exceptionMessages);
+    }
+
+    @AfterEach
+    void releaseMocks() throws Exception {
+        this.closeable.close();
+    }
+
+    private Map<String, OperationService> createMockOperations() {
+        Map<String, OperationService> mockOperations = new HashMap<>();
+        mockOperations.put("+", mock(AdditionService.class));
+        mockOperations.put("-", mock(SubtractionService.class));
+        return mockOperations;
     }
 
     @Test
-    void shouldReturnSubtractionServiceForSubtractionOperation() {
-        OperationService operationService = this.operationFactory.getOperation(this.subtraction);
-        assertSame(SubtractionService.class, operationService.getClass());
+    void testGetOperation_Addition() {
+        OperationService operationService = this.operationFactory.getOperation("+");
+        assertNotNull(operationService);
+        assertTrue(operationService instanceof AdditionService);
+        verifyNoInteractions(this.exceptionMessages);
     }
 
     @Test
-    void shouldThrowExceptionForInvalidOperation() {
-        assertThrows(InvalidOperationException.class, () -> this.operationFactory.getOperation("otherOperation"));
+    void testGetOperation_Subtraction() {
+        OperationService operationService = this.operationFactory.getOperation("-");
+        assertNotNull(operationService);
+        assertTrue(operationService instanceof SubtractionService);
+        verifyNoInteractions(this.exceptionMessages);
+    }
+
+    @Test
+    void testGetOperation_InvalidOperation() {
+        assertThrows(InvalidOperationException.class, () -> this.operationFactory.getOperation("invalidOperation"));
+        verify(this.exceptionMessages).getMessages();
     }
 
 }

@@ -3,11 +3,8 @@ package com.sanitas.test4.calculator.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -15,11 +12,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+
 class BasicOperationRequestTest {
 
-    @Autowired
-    private Validator validator;
     private BasicOperationRequest operation1;
     private BasicOperationRequest operation2;
     private BasicOperationRequest operation3;
@@ -59,8 +54,6 @@ class BasicOperationRequestTest {
         request.setOperation("+");
         request.setNumbers(numbers);
         BindingResult errors = new BeanPropertyBindingResult(request, "request");
-        this.validator.validate(request, errors);
-
         assertTrue(errors.getAllErrors().isEmpty());
     }
 

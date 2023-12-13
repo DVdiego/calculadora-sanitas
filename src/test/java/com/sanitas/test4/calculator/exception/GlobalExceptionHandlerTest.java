@@ -1,61 +1,93 @@
 package com.sanitas.test4.calculator.exception;
 
+
 import com.sanitas.test4.calculator.model.ApiErrorResponse;
+import io.corp.calculator.TracerAPI;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ExtendWith(MockitoExtension.class)
 class GlobalExceptionHandlerTest {
 
-    @Autowired
+    private AutoCloseable closeable;
+    @Mock
+    private TracerAPI tracerAPI;
+
+    @Mock
+    private ExceptionMessages exceptionMessages;
+
+    @InjectMocks
     private GlobalExceptionHandler exceptionHandler;
 
-    @Autowired
-    private ExceptionMessages exceptionMessages;
+    @BeforeEach
+    void setUp() {
+        this.closeable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void releaseMocks() throws Exception {
+        this.closeable.close();
+    }
 
     @Test
     void handleInvalidOperation() {
+        when(this.exceptionMessages.getMessages()).thenReturn(createExceptionMessagesMap());
 
-        InvalidOperationException invalidOperationException = new InvalidOperationException(this.exceptionMessages.getMessages().get("invalid-operation"));
-        ResponseEntity<ApiErrorResponse> responseEntity = this.exceptionHandler.handleInvalidOperation(invalidOperationException);
+        InvalidOperationException ex = new InvalidOperationException("Invalid operation");
+        ResponseEntity<ApiErrorResponse> responseEntity = this.exceptionHandler.handleInvalidOperation(ex);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals(this.exceptionMessages.getMessages().get("invalid-operation"), Objects.requireNonNull(responseEntity.getBody()).getDetails());
-
+        assertEquals("Invalid Operation", Objects.requireNonNull(responseEntity.getBody()).getMessage());
+        assertEquals("Invalid operation", responseEntity.getBody().getDetails());
+        verify(this.tracerAPI, times(1)).trace(responseEntity);
     }
 
     @Test
     void handleHttpMessageNotReadableException() {
+        when(this.exceptionMessages.getMessages()).thenReturn(createExceptionMessagesMap());
 
         HttpMessageNotReadableException exception = mock(HttpMessageNotReadableException.class);
-        when(exception.getMessage()).thenReturn(this.exceptionMessages.getMessages().get("incorrect-data-format"));
+        when(exception.getMessage()).thenReturn("Incorrect data format");
+
         ResponseEntity<ApiErrorResponse> responseEntity = this.exceptionHandler.handleHttpMessageNotReadableException(exception);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertEquals(this.exceptionMessages.getMessages().get("incorrect-data-format"), Objects.requireNonNull(responseEntity.getBody()).getDetails());
+        assertEquals("Incorrect data format", Objects.requireNonNull(responseEntity.getBody()).getMessage());
+        assertEquals("Incorrect data format", responseEntity.getBody().getDetails());
+        verify(this.tracerAPI, times(1)).trace(responseEntity);
     }
 
     @Test
     void handleException() {
+        when(this.exceptionMessages.getMessages()).thenReturn(createExceptionMessagesMap());
 
-        CalculatorException exception = mock(CalculatorException.class);
-        when(exception.getMessage()).thenReturn(this.exceptionMessages.getMessages().get("generic-exception"));
-        ResponseEntity<ApiErrorResponse> responseEntity = this.exceptionHandler.handleException(exception);
+        CalculatorException ex = new CalculatorException("Generic exception");
+        ResponseEntity<ApiErrorResponse> responseEntity = this.exceptionHandler.handleException(ex);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        assertEquals(this.exceptionMessages.getMessages().get("generic-exception"), Objects.requireNonNull(responseEntity.getBody()).getDetails());
+        assertEquals("Internal Server Error", Objects.requireNonNull(responseEntity.getBody()).getMessage());
+        assertEquals("Generic exception", responseEntity.getBody().getDetails());
+        verify(this.tracerAPI, times(1)).trace(responseEntity);
+    }
+
+    private Map<String, String> createExceptionMessagesMap() {
+        Map<String, String> messages = new HashMap<>();
+        messages.put("invalid-operation", "Invalid Operation");
+        messages.put("incorrect-data-format", "Incorrect data format");
+        messages.put("generic-exception", "Internal Server Error");
+        return messages;
     }
 }
