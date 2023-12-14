@@ -198,29 +198,31 @@ El servicio permite realizar operaciones aritméticas básicas de suma y resta, 
 
 ## 4. Procedimiento de ejecución y compilación
 
+1) Instalar y configurar en tu entorno:
+   1) JDK 17 o asegurate de tener cualquier versión compatible
+   2) Maven
 
-1) Descargar el Repositorio.
+2) Descargar el Repositorio.
    Clonar el repositorio utilizando el comando de git o bajándolo de github:
    `git clone https://github.com/DVdiego/calculadora-sanitas.git`
 
-2) Instalar librería Tracer en el repositorio local de maven.
+3) Instalar librería Tracer en el repositorio local de maven.
    Ejecutar el siguiente comando:
    `mvn validate`
 
-3) Compilar el API
+4) Compilar el API
    Para compilar el API se debe ejecutar el siguiente comando en la consola de comandos de Windows en el directorio raíz del proyecto.
    `mvn clean install`
-
-4) Ejecutar el API
+5) Ejecutar el API
    Para ejecutar el API se debe ejecutar el siguiente comando en el directorio raíz del proyecto:
    `mvn spring-boot:run`
    o de forma alternativa, ejecuta el comando: 
    `java -jar target\calculator-0.0.1-SNAPSHOT.jar`
 
-5) Consumo de la API
+6) Consumo de la API
    La documentación OpenAPI del API está disponible en la siguiente ruta (también se puede consumir la API desde aquí):
    http://localhost:8080/swagger-ui/index.html#/
-6) Para generar un informe de cobertura utilizando JaCoCo
+7) Para generar un informe de cobertura utilizando JaCoCo
    `mvn clean test jacoco:report`
    Después de ejecutar este comando, el informe de cobertura estará en siguiente ubicación del proyecto:
    [target/site/jacoco/index.html](target%2Fsite%2Fjacoco%2Findex.html)
