@@ -5,15 +5,14 @@ import com.sanitas.test4.calculator.exception.InvalidOperationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,6 +36,40 @@ class SubtractionServiceTest {
     @AfterEach
     void releaseMocks() throws Exception {
         this.closeable.close();
+    }
+
+    @Test
+    void correctSubtractionWithNegativeNumbers() {
+        List<BigDecimal> numbers = Arrays.asList(BigDecimal.valueOf(10), BigDecimal.valueOf(12), BigDecimal.valueOf(8));
+        BigDecimal result = this.subtractionService.performOperation(numbers);
+        assertEquals(BigDecimal.valueOf(-10), result);
+    }
+
+    @ParameterizedTest(name = "{0} + {1} = {2}")
+    @CsvSource({
+            "0, 1, -1",
+            "1, 5, -4",
+            "52, 48, 4",
+            "99, 2, 97"
+    })
+    void shouldSubtractNumbersCorrectly(int first, int second, int expectedResult) {
+        List<BigDecimal> numbers = Arrays.asList(BigDecimal.valueOf(first), BigDecimal.valueOf(second));
+        BigDecimal result = this.subtractionService.performOperation(numbers);
+        assertEquals(BigDecimal.valueOf(expectedResult), result, () -> first + " - " + second + " should equal " + expectedResult);
+    }
+
+    @Test
+    void subtractNegativeNumbers() {
+        List<BigDecimal> numbers = Arrays.asList(BigDecimal.valueOf(-10), BigDecimal.valueOf(-12));
+        BigDecimal result = this.subtractionService.performOperation(numbers);
+        assertEquals(BigDecimal.valueOf(2), result);
+    }
+
+    @Test
+    void subtractZeroAndPositiveNumber() {
+        List<BigDecimal> numbers = Arrays.asList(BigDecimal.valueOf(7), BigDecimal.valueOf(0));
+        BigDecimal result = this.subtractionService.performOperation(numbers);
+        assertEquals(BigDecimal.valueOf(7), result);
     }
 
     @Test
